@@ -1,1 +1,159 @@
-servver is up for usage
+<!doctype html>
+<html>
+	<head>
+		<title>Beacon - Online Realtime Code Editor for Mobile</title>
+		<meta name="viewport" content="width=device-width, user-scalable=no">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://prazma.github.io/beacon/codemirror/codemirror.js"></script>
+		<script src="https://prazma.github.io/beacon/codemirror/codemirror.css"></script>
+		<link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+		<style>
+			body {
+				margin: 0;
+				background: #333340;
+				font-family: "Quicksand", sans-serif;
+				color: #fff;
+			}
+			#codecontainer {
+				padding: 10px 10px;
+				background: #333340;
+				width: 100%;
+				color: #fff;
+				border: none;
+				font-size: 20px;
+				border-top: 1px solid #40498d;
+				white-space: nowrap;
+				resize: none;
+				outline: none;
+				font-family: "Quicksand", sans-serif;
+			}
+			.header {
+				height: 45px;
+				width: 100%;
+				background: #262834;
+			}
+			.toolbtn {
+				background: transparent;
+				border: none;
+				border-radius: 6px;
+				font-size: 20px;
+				color: #fff;
+				width: 130px;
+				outline: none;
+				margin-top: 10px;
+			}
+			.toolbtn:hover {
+				color: #4d62ff;
+			}
+			.toolbtn:action {
+				color: #4d62ff;
+			}
+			.playground {
+				height: 501px;
+				width: 281;
+				border: 10px solid #c6c6c6;
+				margin-bottom: 0;
+				background: #fff;
+			}
+			.phoneHead {
+				height: 60px;
+				width: 320.25px;
+				background: #c6c6c6;
+				border-top-left-radius: 16px;
+				border-top-right-radius: 16px;
+				margin-right: auto;
+				margin-left: auto;
+				margin-top: 40px;
+			}
+			.phoneBottom {
+				height: 60px;
+				width: 320.25px;
+				background: #c6c6c6;
+				border-bottom-left-radius: 16px;
+				border-bottom-right-radius: 16px;
+				margin-right: auto;
+				margin-left: auto;
+				font-size: 20px;
+				outline: none;
+			}
+			.mobeemulator {
+				position: fixed;
+				top: 0;
+				width: 100%;
+				height: 100vh;
+				text-align: center;	
+				background: rgba(0,0,0,0.6);
+			}
+			.logo {
+				font-size: 30px;
+				color: #fff;
+				background: rgba( 255, 255, 255, 0.2);
+				border: none;
+				float: left;
+				border-right: 1px solid #40498d;
+				border-radius: 0px;
+				height: 45px;
+				width: 150px;
+				outline: none;
+			}
+			.logon {
+				color: #fdda00;
+			}
+		</style>
+		<script src='https://cdn.firebase.com/js/client/2.4.0/firebase.js'></script>
+		<script>
+			// Initialize Firebase
+			var config = {
+				apiKey: "AIzaSyDllHf3ft0lPVYe3nxmKtT99907ZrgrPIw",
+				authDomain: "beacon-94c42.firebaseapp.com",
+				databaseURL: "https://beacon-94c42.firebaseio.com",
+				projectId: "beacon-94c42",
+				storageBucket: "beacon-94c42.appspot.com",
+				messagingSenderId: "796449881241"
+			};
+			firebase.initializeApp(config);
+		</script>
+	</head>
+	<body>
+		<div class="header">
+			<button class="logo">Beacon</button><button class="toolbtn" onclick="shouPreview()">Run Code</button>
+			<span class="logon" id="stats">[Updated]</span>
+		</div>
+		<textarea id="codecontainer" onkeyup="update()">Edit Here</textarea>
+		<div class="mobeemulator" id="mobeemulator" style="display: none;">
+			<div class="phoneHead"></div>
+			<iframe class="playground" id="playground"></iframe><br>
+			<button class="phoneBottom" onclick="hidePreview()">Close Preview</button>
+		</div>
+		<script>
+			var myFirebase = new Firebase('https://beacon-94c42.firebaseio.com');
+			document.getElementById("codecontainer").innerHTML = "Edit Here";
+			
+			function update() {
+				var updateCode = document.getElementById("codecontainer").value;
+				myFirebase.push({codecontent: updateCode});
+				document.getElementById("stats").innerHTML = "[UPDATING...]";
+			}
+			function shouPreview() {
+				document.getElementById("mobeemulator").style.display = "block";
+			}
+			function hidePreview() {
+				document.getElementById("mobeemulator").style.display = "none";
+			}
+			var startListening = function() {
+				myFirebase.on('child_added', function(snapshot) {
+					var code = snapshot.val();
+					var codebin = code.codecontent;
+					console.log(codebin);
+					document.getElementById('codecontainer').value = code.codecontent;
+					document.getElementById("stats").innerHTML = "[UPDATED]";
+					document.getElementById("codecontainer").value = document.getElementById("codecontainer").value.replace(/&lt;/g, '<');
+					document.getElementById("codecontainer").value = document.getElementById("codecontainer").value.replace(/&gt;/g, '>');
+					document.getElementById('playground').src = "about:blank";
+					document.getElementById('playground').contentWindow.document.write( codebin );
+				});
+			}
+			startListening();
+		</script>
+	</body>
+</html>
