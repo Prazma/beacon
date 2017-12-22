@@ -149,7 +149,7 @@
 					document.getElementById('codecontainer').value = code.codecontent;
 					document.getElementById("codecontainer").value = document.getElementById("codecontainer").value.replace(/&lt;/g, '<');
 					document.getElementById("codecontainer").value = document.getElementById("codecontainer").value.replace(/&gt;/g, '>');
-					document.getElementById("stats").innerHTML = "[UPDATED]";
+					document.getElementById("stats").innerHTML = "[SOMEONE ONLINE UPDATED]";
 					document.getElementById('playground').src = "about:blank";
 					document.getElementById('playground').contentWindow.document.write( codebin );
 				});
