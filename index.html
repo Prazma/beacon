@@ -18,6 +18,7 @@
 				padding: 10px 10px;
 				background: #333340;
 				width: 100%;
+				height: 100vh;
 				color: #fff;
 				border: none;
 				font-size: 20px;
@@ -93,7 +94,7 @@
 				border-right: 1px solid #40498d;
 				border-radius: 0px;
 				height: 45px;
-				width: 150px;
+				width: 110px;
 				outline: none;
 			}
 			.logon {
@@ -132,7 +133,7 @@
 			function update() {
 				var updateCode = document.getElementById("codecontainer").value;
 				myFirebase.push({codecontent: updateCode});
-				document.getElementById("stats").innerHTML = "[UPDATING...]";
+				document.getElementById("stats").innerHTML = "[YOU MADE CHANGES!]";
 			}
 			function shouPreview() {
 				document.getElementById("mobeemulator").style.display = "block";
@@ -146,9 +147,9 @@
 					var codebin = code.codecontent;
 					console.log(codebin);
 					document.getElementById('codecontainer').value = code.codecontent;
-					document.getElementById("stats").innerHTML = "[UPDATED]";
 					document.getElementById("codecontainer").value = document.getElementById("codecontainer").value.replace(/&lt;/g, '<');
 					document.getElementById("codecontainer").value = document.getElementById("codecontainer").value.replace(/&gt;/g, '>');
+					document.getElementById("stats").innerHTML = "[UPDATED]";
 					document.getElementById('playground').src = "about:blank";
 					document.getElementById('playground').contentWindow.document.write( codebin );
 				});
